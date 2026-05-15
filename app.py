@@ -155,6 +155,10 @@ with tabs[0]:
             f"</p>",
             unsafe_allow_html=True
         )
+        st.markdown(
+            "*Prediction based on Random Forest model trained on 7,857 vehicles. "
+            "Model achieves R² = 0.969 on held-out test data.*"
+        )
         st.caption(
             "_Currency conversions are approximate (May 2026 rates) for cross-market intuition. "
             "Actual Ugandan prices depend on import duties, local supply, and listing-specific "
@@ -164,33 +168,52 @@ with tabs[0]:
         st.markdown("### 🔍 How this compares to similar vehicles in the dataset")
         similar = df_clean[
             (df_clean['manufacturer'] == manufacturer) &
-            (df_clean['fuel'] == fuel) &
-            (df_clean['age'].between(max(0, age - 2), age + 2))
+            (df_clean['year'].between(max(0, year - 2), year + 2)) &
+            (df_clean['km_driven'].between(max(0, km_driven - 30000), km_driven + 30000))
         ]
 
-        if len(similar) >= 5:
+        if len(similar) < 5:
+            similar = df_clean[
+                (df_clean['manufacturer'] == manufacturer) &
+                (df_clean['year'].between(max(0, year - 4), year + 4))
+            ]
+
+        if len(similar) < 5:
+            similar = df_clean[df_clean['manufacturer'] == manufacturer]
+
+        if len(similar) < 3:
+            similar = df_clean[
+                (df_clean['fuel'] == fuel) &
+                (df_clean['year'].between(max(0, year - 3), year + 3))
+            ]
+
+        if len(similar) < 3:
+            st.info("Not enough similar vehicles for comparison. Prediction is based on broader model patterns.")
+        else:
             avg_price = similar['selling_price'].mean()
             median_price = similar['selling_price'].median()
             avg_price_ugx = avg_price * INR_TO_UGX
             median_price_ugx = median_price * INR_TO_UGX
-            pct_diff = ((predicted_price_inr - avg_price) / avg_price) * 100
+            diff_pct = ((predicted_price_inr - median_price) / median_price) * 100
 
-            st.markdown(f"Found **{len(similar)} similar vehicles** ({manufacturer}, {fuel}, age ±2 years).")
+            st.markdown(f"Compared against **{len(similar)} similar vehicles** in the dataset")
             c1, c2 = st.columns(2)
             c1.metric("Average of similar", f"UGX {avg_price_ugx:,.0f}", help=f"₹ {avg_price:,.0f} INR")
             c2.metric("Median of similar", f"UGX {median_price_ugx:,.0f}", help=f"₹ {median_price:,.0f} INR")
 
-            if abs(pct_diff) < 10:
-                st.success(f"✅ Predicted price within 10% of average for similar vehicles ({pct_diff:+.1f}%) — typical for this profile.")
-            elif pct_diff > 0:
-                st.info(f"📈 Predicted price {pct_diff:+.1f}% above average. May reflect higher power, lower km, or premium ownership history.")
+            if abs(diff_pct) <= 15:
+                st.success("✅ Your prediction is in line with similar vehicles.")
+            elif diff_pct > 15:
+                st.info("📈 Your prediction is higher than typical.")
             else:
-                st.warning(f"📉 Predicted price {pct_diff:+.1f}% below average. May reflect high km, older ownership, or smaller engine.")
-        else:
-            st.info("Not enough similar vehicles for comparison. Prediction is based on broader model patterns.")
+                st.warning("📉 Your prediction is lower than typical.")
 
 with tabs[1]:
     st.markdown("## 📊 Explore the Data")
+    st.markdown(
+        "*This section explores the full cleaned CarDekho dataset and is independent of the prediction inputs. "
+        "Use it to understand the data the model was trained on.*"
+    )
     st.markdown(
         "This is the cleaned CarDekho dataset (~7,857 records) used for model training and analysis. "
         "Use the charts and descriptive statistics to understand the core structure of the dataset."
@@ -217,25 +240,29 @@ with tabs[1]:
         'count': '{:,.0f}'
     }))
 
-    st.image('fig_fuel_pie.png', caption='Distribution of vehicle fuel types', use_column_width=True)
-    st.image('fig_top_manufacturers.png', caption="Top 15 manufacturers — same brands dominate Uganda's used-car fleet", use_column_width=True)
-    st.image('fig_age_km_distributions.png', caption='Age and kilometres driven distributions', use_column_width=True)
-    st.image('fig_price_distribution.png', caption='Price distribution — right-skewed, motivating log-transform', use_column_width=True)
-    st.image('fig_correlation_heatmap.png', caption='Correlation between numeric features', use_column_width=True)
-    st.image('fig_scatter_relationships.png', caption='Price vs age and kilometres — clearly non-linear, motivating polynomial regression', use_column_width=True)
+    st.image('fig_fuel_pie.png', caption='Distribution of vehicle fuel types', width='stretch')
+    st.image('fig_top_manufacturers.png', caption="Top 15 manufacturers — same brands dominate Uganda's used-car fleet", width='stretch')
+    st.image('fig_age_km_distributions.png', caption='Age and kilometres driven distributions', width='stretch')
+    st.image('fig_price_distribution.png', caption='Price distribution — right-skewed, motivating log-transform', width='stretch')
+    st.image('fig_correlation_heatmap.png', caption='Correlation between numeric features', width='stretch')
+    st.image('fig_scatter_relationships.png', caption='Price vs age and kilometres — clearly non-linear, motivating polynomial regression', width='stretch')
 
 with tabs[2]:
     st.markdown("## 📈 Model Comparison")
+    st.markdown(
+        "*This section evaluates all three regression models on the held-out test set. Metrics are computed once during training "
+        "and do not change with prediction inputs.*"
+    )
     st.markdown("Comparison of three regression models trained on the cleaned dataset")
 
     comparison_df = pd.read_csv('model_comparison.csv')
     st.table(comparison_df)
 
-    st.image('fig_model_comparison.png', caption='Side-by-side performance of all three models', use_column_width=True)
-    st.image('fig_model1_linear.png', caption='Model 1: Simple Linear Regression — straight-line fit underfits the curved depreciation', use_column_width=True)
-    st.image('fig_model2_polynomial.png', caption='Model 2: Polynomial Regression (degree 2) — captures curvature but ignores categorical features', use_column_width=True)
-    st.image('fig_model3_feature_importance.png', caption='Model 3: Random Forest feature importance — engine power, age, and manufacturer dominate', use_column_width=True)
-    st.image('fig_model3_pred_vs_actual.png', caption='Random Forest predicted vs actual prices — tight clustering along the diagonal', use_column_width=True)
+    st.image('fig_model_comparison.png', caption='Side-by-side performance of all three models', width='stretch')
+    st.image('fig_model1_linear.png', caption='Model 1: Simple Linear Regression — straight-line fit underfits the curved depreciation', width='stretch')
+    st.image('fig_model2_polynomial.png', caption='Model 2: Polynomial Regression (degree 2) — captures curvature but ignores categorical features', width='stretch')
+    st.image('fig_model3_feature_importance.png', caption='Model 3: Random Forest feature importance — engine power, age, and manufacturer dominate', width='stretch')
+    st.image('fig_model3_pred_vs_actual.png', caption='Random Forest predicted vs actual prices — tight clustering along the diagonal', width='stretch')
 
     st.markdown(
         "Random Forest is the best model for this problem because it natively handles categorical features (manufacturer, fuel, ownership), "
