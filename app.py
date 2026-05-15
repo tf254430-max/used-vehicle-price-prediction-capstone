@@ -145,11 +145,13 @@ if st.button("📈 Predict price", type="primary", use_container_width=True):
     predicted_price_usd = predicted_price_inr * INR_TO_USD
 
     st.markdown("## 💰 Predicted price")
-    c1, c2, c3 = st.columns(3)
-    c1.metric("In Indian Rupees", f"₹ {predicted_price_inr:,.0f}")
-    c2.metric("In Ugandan Shillings (approx.)", f"UGX {predicted_price_ugx:,.0f}")
-    c3.metric("In US Dollars (approx.)", f"$ {predicted_price_usd:,.0f}")
-
+    st.metric("Ugandan Shillings", f"UGX {predicted_price_ugx:,.0f}")
+    st.markdown(
+        f"<p style='text-align: center; color: #666; font-size: 0.9em;'>"
+        f"Reference: ₹{predicted_price_inr:,.0f} INR · ${predicted_price_usd:,.0f} USD"
+        f"</p>",
+        unsafe_allow_html=True
+    )
     st.caption(
         "_Currency conversions are approximate (May 2026 rates) for cross-market intuition. "
         "Actual Ugandan prices depend on import duties, local supply, and listing-specific "
@@ -166,12 +168,14 @@ if st.button("📈 Predict price", type="primary", use_container_width=True):
     if len(similar) >= 5:
         avg_price = similar['selling_price'].mean()
         median_price = similar['selling_price'].median()
+        avg_price_ugx = avg_price * INR_TO_UGX
+        median_price_ugx = median_price * INR_TO_UGX
         pct_diff = ((predicted_price_inr - avg_price) / avg_price) * 100
 
         st.markdown(f"Found **{len(similar)} similar vehicles** ({manufacturer}, {fuel}, age ±2 years).")
         c1, c2 = st.columns(2)
-        c1.metric("Average of similar", f"₹ {avg_price:,.0f}")
-        c2.metric("Median of similar", f"₹ {median_price:,.0f}")
+        c1.metric("Average of similar", f"UGX {avg_price_ugx:,.0f}", help=f"₹ {avg_price:,.0f} INR")
+        c2.metric("Median of similar", f"UGX {median_price_ugx:,.0f}", help=f"₹ {median_price:,.0f} INR")
 
         if abs(pct_diff) < 10:
             st.success(f"✅ Predicted price within 10% of average for similar vehicles ({pct_diff:+.1f}%) — typical for this profile.")
