@@ -82,109 +82,166 @@ st.markdown(
     (Maruti-Suzuki, Toyota, Honda, Hyundai) dominate the ride-hailing fleet.
     """
 )
-st.markdown("---")
-st.markdown("## 🔧 Enter vehicle details")
 
-col1, col2, col3 = st.columns(3)
+tabs = st.tabs(["🔮 Predict Price", "📊 Explore the Data", "📈 Model Comparison"])
 
-with col1:
-    manufacturer = st.selectbox(
-        "Manufacturer", meta['manufacturers'],
-        index=meta['manufacturers'].index('Toyota') if 'Toyota' in meta['manufacturers'] else 0
-    )
-    year = st.number_input(
-        "Year of manufacture", min_value=meta['year_min'], max_value=meta['year_max'],
-        value=min(2014, meta['year_max']), step=1
-    )
-    km_driven = st.number_input(
-        "Kilometres driven", min_value=0, max_value=meta['km_driven_max'],
-        value=80_000, step=1000
-    )
+with tabs[0]:
+    st.markdown("## 🔧 Enter vehicle details")
 
-with col2:
-    fuel = st.selectbox("Fuel type", meta['fuel_types'])
-    transmission = st.selectbox("Transmission", meta['transmissions'])
-    owner = st.selectbox("Ownership history", meta['owner_types'])
+    col1, col2, col3 = st.columns(3)
 
-with col3:
-    engine_cc = st.number_input(
-        "Engine size (CC)", min_value=meta['engine_cc_min'], max_value=meta['engine_cc_max'],
-        value=1500, step=100
-    )
-    max_power = st.number_input(
-        "Max power (bhp)", min_value=float(meta['max_power_min']), max_value=float(meta['max_power_max']),
-        value=85.0, step=5.0
-    )
-    mileage = st.number_input(
-        "Fuel efficiency (kmpl)", min_value=float(meta['mileage_min']), max_value=float(meta['mileage_max']),
-        value=18.0, step=0.5
-    )
+    with col1:
+        manufacturer = st.selectbox(
+            "Manufacturer", meta['manufacturers'],
+            index=meta['manufacturers'].index('Toyota') if 'Toyota' in meta['manufacturers'] else 0
+        )
+        year = st.number_input(
+            "Year of manufacture", min_value=meta['year_min'], max_value=meta['year_max'],
+            value=min(2014, meta['year_max']), step=1
+        )
+        km_driven = st.number_input(
+            "Kilometres driven", min_value=0, max_value=meta['km_driven_max'],
+            value=80_000, step=1000
+        )
 
-col4, col5 = st.columns(2)
-with col4:
-    seats = st.selectbox(
-        "Number of seats", meta['seats_options'],
-        index=meta['seats_options'].index(5) if 5 in meta['seats_options'] else 0
-    )
-with col5:
-    seller_type = st.selectbox("Seller type", meta['seller_types'])
+    with col2:
+        fuel = st.selectbox("Fuel type", meta['fuel_types'])
+        transmission = st.selectbox("Transmission", meta['transmissions'])
+        owner = st.selectbox("Ownership history", meta['owner_types'])
 
-st.markdown("---")
+    with col3:
+        engine_cc = st.number_input(
+            "Engine size (CC)", min_value=meta['engine_cc_min'], max_value=meta['engine_cc_max'],
+            value=1500, step=100
+        )
+        max_power = st.number_input(
+            "Max power (bhp)", min_value=float(meta['max_power_min']), max_value=float(meta['max_power_max']),
+            value=85.0, step=5.0
+        )
+        mileage = st.number_input(
+            "Fuel efficiency (kmpl)", min_value=float(meta['mileage_min']), max_value=float(meta['mileage_max']),
+            value=18.0, step=0.5
+        )
 
-if st.button("📈 Predict price", type="primary", use_container_width=True):
-    age = 2021 - year
-    input_df = pd.DataFrame([{
-        'age': age, 'km_driven': km_driven, 'mileage_kmpl': mileage,
-        'engine_cc': engine_cc, 'max_power_bhp': max_power, 'seats': seats,
-        'manufacturer': manufacturer, 'fuel': fuel, 'transmission': transmission,
-        'seller_type': seller_type, 'owner': owner,
-    }])
+    col4, col5 = st.columns(2)
+    with col4:
+        seats = st.selectbox(
+            "Number of seats", meta['seats_options'],
+            index=meta['seats_options'].index(5) if 5 in meta['seats_options'] else 0
+        )
+    with col5:
+        seller_type = st.selectbox("Seller type", meta['seller_types'])
 
-    predicted_price_inr = float(pipeline.predict(input_df)[0])
-    predicted_price_ugx = predicted_price_inr * INR_TO_UGX
-    predicted_price_usd = predicted_price_inr * INR_TO_USD
+    st.markdown("---")
 
-    st.markdown("## 💰 Predicted price")
-    st.metric("Ugandan Shillings", f"UGX {predicted_price_ugx:,.0f}")
-    st.markdown(
-        f"<p style='text-align: center; color: #666; font-size: 0.9em;'>"
-        f"Reference: ₹{predicted_price_inr:,.0f} INR · ${predicted_price_usd:,.0f} USD"
-        f"</p>",
-        unsafe_allow_html=True
-    )
-    st.caption(
-        "_Currency conversions are approximate (May 2026 rates) for cross-market intuition. "
-        "Actual Ugandan prices depend on import duties, local supply, and listing-specific "
-        "factors not captured in this model._"
-    )
+    if st.button("📈 Predict price", type="primary", use_container_width=True):
+        age = 2021 - year
+        input_df = pd.DataFrame([{
+            'age': age, 'km_driven': km_driven, 'mileage_kmpl': mileage,
+            'engine_cc': engine_cc, 'max_power_bhp': max_power, 'seats': seats,
+            'manufacturer': manufacturer, 'fuel': fuel, 'transmission': transmission,
+            'seller_type': seller_type, 'owner': owner,
+        }])
 
-    st.markdown("### 🔍 How this compares to similar vehicles in the dataset")
-    similar = df_clean[
-        (df_clean['manufacturer'] == manufacturer) &
-        (df_clean['fuel'] == fuel) &
-        (df_clean['age'].between(max(0, age - 2), age + 2))
-    ]
+        predicted_price_inr = float(pipeline.predict(input_df)[0])
+        predicted_price_ugx = predicted_price_inr * INR_TO_UGX
+        predicted_price_usd = predicted_price_inr * INR_TO_USD
 
-    if len(similar) >= 5:
-        avg_price = similar['selling_price'].mean()
-        median_price = similar['selling_price'].median()
-        avg_price_ugx = avg_price * INR_TO_UGX
-        median_price_ugx = median_price * INR_TO_UGX
-        pct_diff = ((predicted_price_inr - avg_price) / avg_price) * 100
+        st.markdown("## 💰 Predicted price")
+        st.metric("Ugandan Shillings", f"UGX {predicted_price_ugx:,.0f}")
+        st.markdown(
+            f"<p style='text-align: center; color: #666; font-size: 0.9em;'>"
+            f"Reference: ₹{predicted_price_inr:,.0f} INR · ${predicted_price_usd:,.0f} USD"
+            f"</p>",
+            unsafe_allow_html=True
+        )
+        st.caption(
+            "_Currency conversions are approximate (May 2026 rates) for cross-market intuition. "
+            "Actual Ugandan prices depend on import duties, local supply, and listing-specific "
+            "factors not captured in this model._"
+        )
 
-        st.markdown(f"Found **{len(similar)} similar vehicles** ({manufacturer}, {fuel}, age ±2 years).")
-        c1, c2 = st.columns(2)
-        c1.metric("Average of similar", f"UGX {avg_price_ugx:,.0f}", help=f"₹ {avg_price:,.0f} INR")
-        c2.metric("Median of similar", f"UGX {median_price_ugx:,.0f}", help=f"₹ {median_price:,.0f} INR")
+        st.markdown("### 🔍 How this compares to similar vehicles in the dataset")
+        similar = df_clean[
+            (df_clean['manufacturer'] == manufacturer) &
+            (df_clean['fuel'] == fuel) &
+            (df_clean['age'].between(max(0, age - 2), age + 2))
+        ]
 
-        if abs(pct_diff) < 10:
-            st.success(f"✅ Predicted price within 10% of average for similar vehicles ({pct_diff:+.1f}%) — typical for this profile.")
-        elif pct_diff > 0:
-            st.info(f"📈 Predicted price {pct_diff:+.1f}% above average. May reflect higher power, lower km, or premium ownership history.")
+        if len(similar) >= 5:
+            avg_price = similar['selling_price'].mean()
+            median_price = similar['selling_price'].median()
+            avg_price_ugx = avg_price * INR_TO_UGX
+            median_price_ugx = median_price * INR_TO_UGX
+            pct_diff = ((predicted_price_inr - avg_price) / avg_price) * 100
+
+            st.markdown(f"Found **{len(similar)} similar vehicles** ({manufacturer}, {fuel}, age ±2 years).")
+            c1, c2 = st.columns(2)
+            c1.metric("Average of similar", f"UGX {avg_price_ugx:,.0f}", help=f"₹ {avg_price:,.0f} INR")
+            c2.metric("Median of similar", f"UGX {median_price_ugx:,.0f}", help=f"₹ {median_price:,.0f} INR")
+
+            if abs(pct_diff) < 10:
+                st.success(f"✅ Predicted price within 10% of average for similar vehicles ({pct_diff:+.1f}%) — typical for this profile.")
+            elif pct_diff > 0:
+                st.info(f"📈 Predicted price {pct_diff:+.1f}% above average. May reflect higher power, lower km, or premium ownership history.")
+            else:
+                st.warning(f"📉 Predicted price {pct_diff:+.1f}% below average. May reflect high km, older ownership, or smaller engine.")
         else:
-            st.warning(f"📉 Predicted price {pct_diff:+.1f}% below average. May reflect high km, older ownership, or smaller engine.")
-    else:
-        st.info("Not enough similar vehicles for comparison. Prediction is based on broader model patterns.")
+            st.info("Not enough similar vehicles for comparison. Prediction is based on broader model patterns.")
+
+with tabs[1]:
+    st.markdown("## 📊 Explore the Data")
+    st.markdown(
+        "This is the cleaned CarDekho dataset (~7,857 records) used for model training and analysis. "
+        "Use the charts and descriptive statistics to understand the core structure of the dataset."
+    )
+
+    stats_cols = [
+        'selling_price', 'km_driven', 'age', 'mileage_kmpl',
+        'engine_cc', 'max_power_bhp', 'seats'
+    ]
+    stats = pd.DataFrame({
+        'mean': df_clean[stats_cols].mean(),
+        'median': df_clean[stats_cols].median(),
+        'mode': df_clean[stats_cols].mode().iloc[0],
+        'std': df_clean[stats_cols].std(),
+        'count': df_clean[stats_cols].count(),
+    })
+    stats = stats[['mean', 'median', 'mode', 'std', 'count']]
+    stats.index.name = 'feature'
+    st.dataframe(stats.style.format({
+        'mean': '{:,.2f}',
+        'median': '{:,.2f}',
+        'mode': '{:,.2f}',
+        'std': '{:,.2f}',
+        'count': '{:,.0f}'
+    }))
+
+    st.image('fig_fuel_pie.png', caption='Distribution of vehicle fuel types', use_column_width=True)
+    st.image('fig_top_manufacturers.png', caption="Top 15 manufacturers — same brands dominate Uganda's used-car fleet", use_column_width=True)
+    st.image('fig_age_km_distributions.png', caption='Age and kilometres driven distributions', use_column_width=True)
+    st.image('fig_price_distribution.png', caption='Price distribution — right-skewed, motivating log-transform', use_column_width=True)
+    st.image('fig_correlation_heatmap.png', caption='Correlation between numeric features', use_column_width=True)
+    st.image('fig_scatter_relationships.png', caption='Price vs age and kilometres — clearly non-linear, motivating polynomial regression', use_column_width=True)
+
+with tabs[2]:
+    st.markdown("## 📈 Model Comparison")
+    st.markdown("Comparison of three regression models trained on the cleaned dataset")
+
+    comparison_df = pd.read_csv('model_comparison.csv')
+    st.table(comparison_df)
+
+    st.image('fig_model_comparison.png', caption='Side-by-side performance of all three models', use_column_width=True)
+    st.image('fig_model1_linear.png', caption='Model 1: Simple Linear Regression — straight-line fit underfits the curved depreciation', use_column_width=True)
+    st.image('fig_model2_polynomial.png', caption='Model 2: Polynomial Regression (degree 2) — captures curvature but ignores categorical features', use_column_width=True)
+    st.image('fig_model3_feature_importance.png', caption='Model 3: Random Forest feature importance — engine power, age, and manufacturer dominate', use_column_width=True)
+    st.image('fig_model3_pred_vs_actual.png', caption='Random Forest predicted vs actual prices — tight clustering along the diagonal', use_column_width=True)
+
+    st.markdown(
+        "Random Forest is the best model for this problem because it natively handles categorical features (manufacturer, fuel, ownership), "
+        "captures non-linear interactions, and is robust to outliers. The Simple Linear baseline fails due to fundamental shape mismatch "
+        "with the curved depreciation pattern. Polynomial regression captures the curvature but cannot represent the categorical structure of the data."
+    )
 
 st.markdown("---")
 st.markdown(
