@@ -23,8 +23,7 @@ The methodology is framed for direct application to **Uganda's used-vehicle mark
 
 - `capstone_vehicle_prices.ipynb` — Main analysis notebook (all 12 sections)
 - `app.py` — Streamlit web application
-- `generate_report.py` — Generates the Word report
-- `Capstone_Report.docx` — Written submission report
+- `generate_report.py` — Generates the Word report locally (not committed to this repository)
 - `vehicles_clean.csv` — Cleaned dataset (output of notebook)
 - `model_comparison.csv` — Final metrics for all three models
 - `rf_pipeline.joblib` — Trained Random Forest pipeline
