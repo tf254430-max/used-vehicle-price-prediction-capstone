@@ -57,6 +57,7 @@ jupyter nbconvert --to notebook --execute capstone_vehicle_prices.ipynb --output
 
 ### 4. Launch the web app
 ```powershell
+.\	env\Scripts\Activate.ps1
 streamlit run app.py
 # Open http://localhost:8501
 ```
@@ -65,6 +66,26 @@ streamlit run app.py
 ```powershell
 python generate_report.py
 ```
+
+---
+
+## Local usage
+Use the project locally with these commands once the environment is installed and the dataset is available.
+
+1. Activate the virtual environment:
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+2. Execute the notebook end-to-end:
+```powershell
+python build_notebook.py
+jupyter nbconvert --to notebook --execute capstone_vehicle_prices.ipynb --output capstone_vehicle_prices.ipynb --ExecutePreprocessor.timeout=600
+```
+3. Start the Streamlit app:
+```powershell
+streamlit run app.py
+```
+4. Open the app at `http://localhost:8501`.
 
 ---
 
