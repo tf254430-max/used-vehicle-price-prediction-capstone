@@ -1,0 +1,67 @@
+{
+  "manufacturers": [
+    "BMW",
+    "Chevrolet",
+    "Ford",
+    "Honda",
+    "Hyundai",
+    "Jaguar",
+    "Mahindra",
+    "Maruti",
+    "Nissan",
+    "Renault",
+    "Skoda",
+    "Tata",
+    "Toyota",
+    "Volkswagen",
+    "Volvo",
+    "other"
+  ],
+  "fuel_types": [
+    "CNG",
+    "Diesel",
+    "LPG",
+    "Petrol"
+  ],
+  "transmissions": [
+    "Automatic",
+    "Manual"
+  ],
+  "seller_types": [
+    "Dealer",
+    "Individual",
+    "Trustmark Dealer"
+  ],
+  "owner_types": [
+    "First Owner",
+    "Fourth & Above Owner",
+    "Second Owner",
+    "Test Drive Car",
+    "Third Owner"
+  ],
+  "year_min": 1994,
+  "year_max": 2020,
+  "km_driven_max": 500000,
+  "engine_cc_min": 624,
+  "engine_cc_max": 3604,
+  "max_power_min": 32.8,
+  "max_power_max": 400.0,
+  "mileage_min": 0.0,
+  "mileage_max": 42.0,
+  "seats_options": [
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    14
+  ],
+  "model_metrics": {
+    "rmse_inr": 140173.3148610578,
+    "mae_inr": 72068.96866174645,
+    "r2": 0.9690039983755822
+  }
+}

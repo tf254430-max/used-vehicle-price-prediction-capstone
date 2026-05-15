@@ -1,0 +1,13 @@
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+Car details v3.csv
+car data.csv
+CAR DETAILS FROM CAR DEKHO.csv
+car details v4.csv
+*.zip
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
