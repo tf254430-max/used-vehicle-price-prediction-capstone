@@ -4,18 +4,10 @@ Capstone Project: Tinka Fahad & Tugume Andrew
 Cavendish University Uganda, May 2026
 """
 
-import warnings
-# Suppress Streamlit deprecation noise about `use_column_width` coming
-# from the installed Streamlit package (site-packages). We filter this
-# specific message so the app UI stays clean for demos. This must run
-# before importing `streamlit` so the warning is filtered at import-time.
-warnings.filterwarnings("ignore", message=".*use_column_width.*")
-
 import streamlit as st
 import joblib
 import json
 import pandas as pd
-import numpy as np
 
 st.set_page_config(
     page_title="Used Vehicle Price Predictor — Capstone",
