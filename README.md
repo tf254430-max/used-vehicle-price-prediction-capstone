@@ -13,9 +13,29 @@
 
 ## Summary
 
-This capstone develops three regression models — Simple Linear, Polynomial (degree 2), and Random Forest — to predict the resale price of used vehicles, using the CarDekho India dataset (~8,128 listings). Random Forest Regression achieves the best performance and is identified as the best model for the problem.
+This capstone develops three regression models — Simple Linear, Polynomial (degree 2), and Random Forest — to predict the resale price of used vehicles, using the CarDekho India dataset (8,128 listings; 7,857 after cleaning). Random Forest Regression achieves the best performance and is identified as the best model for the problem.
 
 The methodology is framed for direct application to **Uganda's used-vehicle market**, which shares structural features with India's market: right-hand-drive configuration, dominant Japanese manufacturers (Maruti-Suzuki, Toyota, Honda, Hyundai), and strong import-driven price formation. A Streamlit web application demonstrates the trained model for end-users.
+
+## Headline results (held-out test set)
+
+| Model | R² | RMSE (INR) | MAE (INR) |
+|---|---|---|---|
+| Simple Linear (age only) | 0.175 | 723,055 | 382,268 |
+| Polynomial degree 2 (4 features) | 0.847 | 311,945 | 181,319 |
+| **Random Forest (11 features)** | **0.969** | **140,173** | **72,069** |
+
+Random Forest wins by a large margin: it handles categorical features (manufacturer, fuel, ownership) natively, captures non-linear feature interactions, and is robust to outliers.
+
+## Marking scheme coverage (Total: 100)
+
+| Rubric Component | Marks | Where to find it |
+|---|---|---|
+| Data Preparation & Preprocessing | 20 | Notebook §2–4, Report §2 |
+| Data Understanding & Exploration | 20 | Notebook §5–7, Report §3 |
+| Regression Model 1 — Simple Linear | 20 | Notebook §8, Report §4.1 |
+| Regression Model 2 — Polynomial | 20 | Notebook §9, Report §4.2 |
+| Regression Model 3 — Random Forest + Conclusion | 20 | Notebook §10–12, Report §4.3–6 |
 
 ---
 
@@ -28,7 +48,7 @@ The methodology is framed for direct application to **Uganda's used-vehicle mark
 - `model_comparison.csv` — Final metrics for all three models
 - `rf_pipeline.joblib` — Trained Random Forest pipeline
 - `ui_metadata.json` — UI dropdown options
-- `requirements.txt` — Python dependencies (pinned)
+- `requirements.txt` — Python dependencies (minimum versions tested)
 - `figures/` — All generated visualisations
 
 ## How to reproduce
@@ -56,7 +76,7 @@ jupyter nbconvert --to notebook --execute capstone_vehicle_prices.ipynb --output
 
 ### 4. Launch the web app
 ```powershell
-.\	env\Scripts\Activate.ps1
+.\venv\Scripts\Activate.ps1
 streamlit run app.py
 # Open http://localhost:8501
 ```
