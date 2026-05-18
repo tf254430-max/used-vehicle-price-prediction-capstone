@@ -27,16 +27,6 @@ The methodology is framed for direct application to **Uganda's used-vehicle mark
 
 Random Forest wins by a large margin: it handles categorical features (manufacturer, fuel, ownership) natively, captures non-linear feature interactions, and is robust to outliers.
 
-## Marking scheme coverage (Total: 100)
-
-| Rubric Component | Marks | Where to find it |
-|---|---|---|
-| Data Preparation & Preprocessing | 20 | Notebook §2–4, Report §2 |
-| Data Understanding & Exploration | 20 | Notebook §5–7, Report §3 |
-| Regression Model 1 — Simple Linear | 20 | Notebook §8, Report §4.1 |
-| Regression Model 2 — Polynomial | 20 | Notebook §9, Report §4.2 |
-| Regression Model 3 — Random Forest + Conclusion | 20 | Notebook §10–12, Report §4.3–6 |
-
 ---
 
 ## Repository structure
@@ -79,11 +69,6 @@ jupyter nbconvert --to notebook --execute capstone_vehicle_prices.ipynb --output
 .\venv\Scripts\Activate.ps1
 streamlit run app.py
 # Open http://localhost:8501
-```
-
-### 5. Regenerate the Word report
-```powershell
-python generate_report.py
 ```
 
 ---
