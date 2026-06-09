@@ -11,7 +11,7 @@ import pandas as pd
 
 st.set_page_config(
     page_title="Used Vehicle Price Predictor — Capstone",
-    page_icon="🚗",
+    page_icon="",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -38,7 +38,7 @@ INR_TO_UGX = 45
 INR_TO_USD = 0.012
 
 with st.sidebar:
-    st.markdown("## 📚 About this project")
+    st.markdown("## About this project")
     st.markdown(
         """
         **Capstone Project**
@@ -56,14 +56,14 @@ with st.sidebar:
         """
     )
     st.markdown("---")
-    st.markdown("## 🎯 Model performance")
+    st.markdown("## Model performance")
     metrics = meta.get('model_metrics', {})
     if metrics:
         st.metric("R² Score", f"{metrics.get('r2', 0):.3f}")
         st.metric("RMSE", f"₹{metrics.get('rmse_inr', 0):,.0f}")
         st.metric("MAE", f"₹{metrics.get('mae_inr', 0):,.0f}")
     st.markdown("---")
-    st.markdown("## 📊 Dataset")
+    st.markdown("## Dataset")
     st.markdown(
         f"""
         - **Source:** CarDekho India (Kaggle)
@@ -72,7 +72,7 @@ with st.sidebar:
         """
     )
 
-st.title("🚗 Used Vehicle Price Predictor")
+st.title("Used Vehicle Price Predictor")
 st.markdown(
     """
     A Random Forest regression model predicting used vehicle prices,
@@ -82,10 +82,10 @@ st.markdown(
     """
 )
 
-tabs = st.tabs(["🔮 Predict Price", "📊 Explore the Data", "📈 Model Comparison"])
+tabs = st.tabs(["Predict Price", "Explore the Data", "Model Comparison"])
 
 with tabs[0]:
-    st.markdown("## 🔧 Enter vehicle details")
+    st.markdown("##  Enter vehicle details")
 
     col1, col2, col3 = st.columns(3)
 
@@ -133,7 +133,7 @@ with tabs[0]:
 
     st.markdown("---")
 
-    if st.button("📈 Predict price", type="primary", use_container_width=True):
+    if st.button("Predict price", type="primary", use_container_width=True):
         age = 2021 - year
         input_df = pd.DataFrame([{
             'age': age, 'km_driven': km_driven, 'mileage_kmpl': mileage,
@@ -146,7 +146,7 @@ with tabs[0]:
         predicted_price_ugx = predicted_price_inr * INR_TO_UGX
         predicted_price_usd = predicted_price_inr * INR_TO_USD
 
-        st.markdown("## 💰 Predicted price")
+        st.markdown("## Predicted price")
         st.metric("Ugandan Shillings", f"UGX {predicted_price_ugx:,.0f}")
         st.markdown(
             f"<p style='text-align: center; color: #666; font-size: 0.9em;'>"
@@ -164,7 +164,7 @@ with tabs[0]:
             "factors not captured in this model._"
         )
 
-        st.markdown("### 🔍 How this compares to similar vehicles in the dataset")
+        st.markdown("### How this compares to similar vehicles in the dataset")
         similar = df_clean[
             (df_clean['manufacturer'] == manufacturer) &
             (df_clean['year'].between(max(0, year - 2), year + 2)) &
@@ -201,14 +201,14 @@ with tabs[0]:
             c2.metric("Median of similar", f"UGX {median_price_ugx:,.0f}", help=f"₹ {median_price:,.0f} INR")
 
             if abs(diff_pct) <= 15:
-                st.success("✅ Your prediction is in line with similar vehicles.")
+                st.success(" Your prediction is in line with similar vehicles.")
             elif diff_pct > 15:
-                st.info("📈 Your prediction is higher than typical.")
+                st.info("Your prediction is higher than typical.")
             else:
-                st.warning("📉 Your prediction is lower than typical.")
+                st.warning(" Your prediction is lower than typical.")
 
 with tabs[1]:
-    st.markdown("## 📊 Explore the Data")
+    st.markdown("## Explore the Data")
     st.markdown(
         "*This section explores the full cleaned CarDekho dataset and is independent of the prediction inputs. "
         "Use it to understand the data the model was trained on.*"
@@ -247,7 +247,7 @@ with tabs[1]:
     st.image('fig_scatter_relationships.png', caption='Price vs age and kilometres — clearly non-linear, motivating polynomial regression', width='stretch')
 
 with tabs[2]:
-    st.markdown("## 📈 Model Comparison")
+    st.markdown("## Model Comparison")
     st.markdown(
         "*This section evaluates all three regression models on the held-out test set. Metrics are computed once during training "
         "and do not change with prediction inputs.*"

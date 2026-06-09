@@ -6,7 +6,7 @@
 
 ## Project metadata
 
-- **Authors:** Tinka Fahad (Student ID 254430) and Tugume Andrew
+- **Authors:** Tinka Fahad (Student ID 254430) and Tugume Andrew (Student ID 240506)
 - **Institution:** Cavendish University Uganda
 - **Programme:** BSc Data Science & AI
 - **Course:** Predictive Analytics Capstone

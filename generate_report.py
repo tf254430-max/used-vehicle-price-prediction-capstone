@@ -33,7 +33,7 @@ doc.add_paragraph()
 author_para = doc.add_paragraph()
 author_para.alignment = WD_ALIGN_PARAGRAPH.CENTER
 author_para.add_run('Tinka Fahad — Student ID: 254430\n').bold = True
-author_para.add_run('Tugume Andrew\n').bold = True
+author_para.add_run('Tugume Andrew - Student ID: 240506\n').bold = True
 author_para.add_run('BSc Data Science & Artificial Intelligence\n')
 author_para.add_run('Cavendish University Uganda\n')
 author_para.add_run('Predictive Analytics Capstone — May 2026')

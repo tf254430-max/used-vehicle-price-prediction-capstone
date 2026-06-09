@@ -95,4 +95,4 @@ streamlit run app.py
 
 ## Contact
 - **Tinka Fahad** — Student ID 254430 — Cavendish University Uganda
-- **Tugume Andrew** — Cavendish University Uganda
+- **Tugume Andrew** — Student ID 254430 - Cavendish University Uganda

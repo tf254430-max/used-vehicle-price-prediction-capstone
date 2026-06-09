@@ -13,7 +13,7 @@ title_md = '''# Predicting Used Vehicle Prices in an Emerging Market
 
 **Authors:**
 - **Tinka Fahad** — Student ID: 254430
-- **Tugume Andrew**
+- **Tugume Andrew** — Student ID: 240506
 
 **Programme:** BSc Data Science & Artificial Intelligence
 **Institution:** Cavendish University Uganda
