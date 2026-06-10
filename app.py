@@ -46,7 +46,7 @@ with st.sidebar:
 
         **Authors:**
         - Tinka Fahad (254430)
-        - Tugume Andrew
+        - Tugume Andrew (240506)
 
         **Institution:**
         Cavendish University Uganda

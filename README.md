@@ -7,7 +7,7 @@
 
 **Authors:**
 - **Tinka Fahad** — Student ID: 254430
-- **Tugume Andrew**
+- **Tugume Andrew**— Student ID: 204506
 
 ---
 
@@ -95,4 +95,4 @@ streamlit run app.py
 
 ## Contact
 - **Tinka Fahad** — Student ID 254430 — Cavendish University Uganda
-- **Tugume Andrew** — Student ID 254430 - Cavendish University Uganda
+- **Tugume Andrew** — Student ID 240506 - Cavendish University Uganda
