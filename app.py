@@ -249,24 +249,37 @@ with tabs[1]:
 with tabs[2]:
     st.markdown("## Model Comparison")
     st.markdown(
-        "*This section evaluates all three regression models on the held-out test set. Metrics are computed once during training "
+        "*This section evaluates all four regression models on the held-out test set. Metrics are computed once during training "
         "and do not change with prediction inputs.*"
     )
-    st.markdown("Comparison of three regression models trained on the cleaned dataset")
+    st.markdown("Comparison of four regression models trained on the cleaned dataset")
 
     comparison_df = pd.read_csv('model_comparison.csv')
     st.table(comparison_df)
 
-    st.image('fig_model_comparison.png', caption='Side-by-side performance of all three models', width='stretch')
+    st.image('fig_model_comparison.png', caption='Side-by-side performance of all four models', width='stretch')
+
+    st.markdown("### Model details")
     st.image('fig_model1_linear.png', caption='Model 1: Simple Linear Regression — straight-line fit underfits the curved depreciation', width='stretch')
     st.image('fig_model2_polynomial.png', caption='Model 2: Polynomial Regression (degree 2) — captures curvature but ignores categorical features', width='stretch')
     st.image('fig_model3_feature_importance.png', caption='Model 3: Random Forest feature importance — engine power, age, and manufacturer dominate', width='stretch')
-    st.image('fig_model3_pred_vs_actual.png', caption='Random Forest predicted vs actual prices — tight clustering along the diagonal', width='stretch')
+    st.image('fig_model3_pred_vs_actual.png', caption='Model 3: Random Forest predicted vs actual — tight clustering along the diagonal', width='stretch')
+    st.image('fig_model4_mlr_pred_vs_actual.png', caption='Model 4: Multiple Linear Regression predicted vs actual — wider scatter shows linear limits', width='stretch')
 
+    st.markdown("### Key finding: non-linearity matters more than feature richness")
     st.markdown(
-        "Random Forest is the best model for this problem because it natively handles categorical features (manufacturer, fuel, ownership), "
-        "captures non-linear interactions, and is robust to outliers. The Simple Linear baseline fails due to fundamental shape mismatch "
-        "with the curved depreciation pattern. Polynomial regression captures the curvature but cannot represent the categorical structure of the data."
+        """
+        | Rank | Model | R² | What it tells us |
+        |---|---|---|---|
+        | 4th | Model 1: Simple LR | 0.1753 | One feature (`age`) is not enough |
+        | 3rd | Model 4: Multiple LR | 0.7987 | All features, but linear only |
+        | 2nd | Model 2: Polynomial | 0.8465 | 4 numeric features with curvature — **beats full-feature linear** |
+        | **1st** | **Model 3: Random Forest** | **0.9690** | Full features + non-linearity + interactions |
+
+        Model 4 (Multiple LR) uses the **same features** as Random Forest but stays linear — it scores 0.80.
+        Model 2 (Polynomial) uses only 4 numeric features but adds non-linear terms — it scores 0.85.
+        **Non-linearity is more valuable than more features.** Random Forest gets both, which is why it wins decisively.
+        """
     )
 
 st.markdown("---")
